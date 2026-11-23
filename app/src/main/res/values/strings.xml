@@ -60,4 +60,12 @@
     <!-- Anuncios -->
     <string name="title_anuncios">Anuncios de la Comunidad</string>
     <string name="label_publicado_por">Publicado por:</string>
+
+    <!-- Alertas -->
+    <string name="title_alertas">Alertas</string>
+    <string name="subtitle_alertas">Historial de alertas</string>
+    <string name="label_estado_activa">Activa</string>
+    <string name="label_estado_atendida">Atendida</string>
+    <string name="label_estado_cerrada">Cerrada</string>
+    <string name="label_alerta_reportado_por">Reportado por:</string>
 </resources>

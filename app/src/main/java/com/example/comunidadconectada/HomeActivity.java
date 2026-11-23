@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
         btnChatGeneral.setOnClickListener(v -> abrirChat());
         btnAnuncios.setOnClickListener(v -> abrirAnuncios());
         btnProductos.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_productos)));
-        btnAlertas.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_alertas)));
+        btnAlertas.setOnClickListener(v -> abrirAlertas());
         btnActivarAlarma.setOnClickListener(v -> activarAlarma());
 
         btnMiPerfil.setOnClickListener(v -> abrirPerfil());
@@ -74,6 +74,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private void abrirAnuncios() {
         Intent intent = new Intent(this, AnunciosActivity.class);
+        startActivity(intent);
+    }
+
+    private void abrirAlertas() {
+        Intent intent = new Intent(this, AlertasActivity.class);
         startActivity(intent);
     }
 

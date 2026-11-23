@@ -4,4 +4,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="alarm_red">#D32F2F</color>
     <color name="alarm_red_container">#FFDAD6</color>
+
+    <!-- Estados de Alertas -->
+    <color name="estado_activa_text">#B71C1C</color>
+    <color name="estado_activa_bg">#FFDAD6</color>
+
+    <color name="estado_atendida_text">#E65100</color>
+    <color name="estado_atendida_bg">#FFE0B2</color>
+
+    <color name="estado_cerrada_text">#1B5E20</color>
+    <color name="estado_cerrada_bg">#C8E6C9</color>
 </resources>
