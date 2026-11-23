@@ -57,6 +57,18 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("anuncios");
         FirebaseMessaging.getInstance().subscribeToTopic("alertas");
 
+        // Obtener Token FCM y guardarlo en la base de datos para pruebas directas
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String token = task.getResult();
+                android.util.Log.d("FCM_TOKEN", "Token del dispositivo: " + token);
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    mDatabase.child("usuarios").child(user.getUid()).child("fcmToken").setValue(token);
+                }
+            }
+        });
+
         // Solicitar permiso de notificaciones en Android 13+ (API 33+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
