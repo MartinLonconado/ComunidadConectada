@@ -11,6 +11,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -24,6 +27,13 @@ public class ComunidadFirebaseMessagingService extends FirebaseMessagingService 
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.d(TAG, "Nuevo FCM Token recibido: " + token);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseDatabase.getInstance().getReference("usuarios")
+                    .child(user.getUid())
+                    .child("fcmToken")
+                    .setValue(token);
+        }
     }
 
     @Override

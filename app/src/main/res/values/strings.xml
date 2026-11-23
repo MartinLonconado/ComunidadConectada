@@ -50,6 +50,12 @@
     <string name="btn_guardar">Guardar</string>
     <string name="btn_cancelar">Cancelar</string>
     <string name="msg_nombre_actualizado">Nombre actualizado correctamente</string>
+    <string name="label_token_fcm">Token FCM del dispositivo</string>
+    <string name="btn_copiar_token">Copiar Token para pruebas</string>
+    <string name="msg_token_copiado">Token FCM copiado al portapapeles</string>
+    <string name="msg_obteniendo_token">Cargando token FCM…</string>
+    <string name="error_obtener_token_fcm">No se pudo obtener el token FCM.</string>
+    <string name="msg_esperando_token">Obteniendo token, inténtalo de nuevo en unos segundos…</string>
 
     <!-- Chat Grupal -->
     <string name="title_chat">Chat Grupal</string>
