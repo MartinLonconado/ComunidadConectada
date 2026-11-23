@@ -15,6 +15,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -88,6 +91,13 @@ public class ProfileActivity extends AppCompatActivity {
             String nuevoNombre = input.getText().toString().trim();
             if (!TextUtils.isEmpty(nuevoNombre)) {
                 tvNombreUsuario.setText(nuevoNombre);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    FirebaseDatabase.getInstance().getReference("usuarios")
+                            .child(user.getUid())
+                            .child("nombre")
+                            .setValue(nuevoNombre);
+                }
                 Toast.makeText(ProfileActivity.this, R.string.msg_nombre_actualizado, Toast.LENGTH_SHORT).show();
             }
         });

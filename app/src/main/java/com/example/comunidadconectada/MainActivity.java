@@ -15,17 +15,24 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextInputLayout tilEmail, tilPassword;
     private TextInputEditText etEmail, etPassword;
+    private MaterialButton btnIniciarSesion;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -38,13 +45,22 @@ public class MainActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
 
-        MaterialButton btnIniciarSesion = findViewById(R.id.btn_iniciar_sesion);
+        btnIniciarSesion = findViewById(R.id.btn_iniciar_sesion);
         MaterialButton btnRegistrarse = findViewById(R.id.btn_registrarse);
         MaterialButton btnRecuperarPassword = findViewById(R.id.btn_recuperar_password);
 
         btnIniciarSesion.setOnClickListener(v -> iniciarSesion());
         btnRegistrarse.setOnClickListener(v -> abrirRegistro());
         btnRecuperarPassword.setOnClickListener(v -> abrirRecuperarPassword());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            irAHome();
+        }
     }
 
     private void iniciarSesion() {
@@ -70,11 +86,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (esValido) {
-            Toast.makeText(this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-            finish();
+            btnIniciarSesion.setEnabled(false);
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        btnIniciarSesion.setEnabled(true);
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
+                            irAHome();
+                        } else {
+                            String error = task.getException() != null ? task.getException().getMessage() : "Error al iniciar sesión";
+                            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                        }
+                    });
         }
+    }
+
+    private void irAHome() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void abrirRegistro() {

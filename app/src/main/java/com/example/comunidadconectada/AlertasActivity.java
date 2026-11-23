@@ -3,16 +3,29 @@ package com.example.comunidadconectada;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AlertasActivity extends AppCompatActivity {
+
+    private final List<Alerta> listaAlertas = new ArrayList<>();
+    private AlertasAdapter adapter;
+    private DatabaseReference mAlertasRef;
+    private ValueEventListener alertasListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +40,46 @@ public class AlertasActivity extends AppCompatActivity {
         });
 
         RecyclerView rvAlertas = findViewById(R.id.rv_alertas);
+        adapter = new AlertasAdapter(listaAlertas);
+        rvAlertas.setAdapter(adapter);
 
-        List<Alerta> listaAlertas = new ArrayList<>();
+        mAlertasRef = FirebaseDatabase.getInstance().getReference("alertas");
+        cargarAlertasDesdeFirebase();
+    }
+
+    private void cargarAlertasDesdeFirebase() {
+        alertasListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listaAlertas.clear();
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    Alerta alerta = item.getValue(Alerta.class);
+                    if (alerta != null) {
+                        listaAlertas.add(alerta);
+                    }
+                }
+                // Si la base de datos está vacía, mostrar alertas de demostración
+                if (listaAlertas.isEmpty()) {
+                    cargarAlertasDemo();
+                } else {
+                    Collections.reverse(listaAlertas); // Las más recientes arriba
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (listaAlertas.isEmpty()) {
+                    cargarAlertasDemo();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        mAlertasRef.addValueEventListener(alertasListener);
+    }
+
+    private void cargarAlertasDemo() {
         listaAlertas.add(new Alerta(
                 "Alarma de Emergencia",
                 "Activación del botón de pánico desde el departamento. Solicitud de asistencia inmediata.",
@@ -50,15 +101,13 @@ public class AlertasActivity extends AppCompatActivity {
                 "Ayer, 18:45 hrs",
                 EstadoAlerta.CERRADA
         ));
-        listaAlertas.add(new Alerta(
-                "Portón Principal Trabado",
-                "Falla en el sensor del portón vehicular de acceso principal.",
-                "Conserjería",
-                "21/05/2024 09:10 hrs",
-                EstadoAlerta.CERRADA
-        ));
+    }
 
-        AlertasAdapter adapter = new AlertasAdapter(listaAlertas);
-        rvAlertas.setAdapter(adapter);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAlertasRef != null && alertasListener != null) {
+            mAlertasRef.removeEventListener(alertasListener);
+        }
     }
 }

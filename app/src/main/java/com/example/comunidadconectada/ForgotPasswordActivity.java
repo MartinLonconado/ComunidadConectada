@@ -14,11 +14,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private TextInputLayout tilEmail;
     private TextInputEditText etEmail;
+    private MaterialButton btnEnviar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         tilEmail = findViewById(R.id.til_email);
         etEmail = findViewById(R.id.et_email);
 
-        MaterialButton btnEnviar = findViewById(R.id.btn_enviar_recuperacion);
+        btnEnviar = findViewById(R.id.btn_enviar_recuperacion);
         MaterialButton btnVolver = findViewById(R.id.btn_volver_login);
 
         btnEnviar.setOnClickListener(v -> enviarInstrucciones());
@@ -53,8 +55,18 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             tilEmail.setError(getString(R.string.error_email_invalido));
         } else {
-            Toast.makeText(this, getString(R.string.msg_recuperar_password), Toast.LENGTH_LONG).show();
-            finish();
+            btnEnviar.setEnabled(false);
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener(task -> {
+                        btnEnviar.setEnabled(true);
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, getString(R.string.msg_recuperar_password), Toast.LENGTH_LONG).show();
+                            finish();
+                        } else {
+                            String error = task.getException() != null ? task.getException().getMessage() : "Error al enviar correo";
+                            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+                        }
+                    });
         }
     }
 }

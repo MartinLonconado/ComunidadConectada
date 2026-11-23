@@ -15,17 +15,28 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private TextInputLayout tilNombre, tilDepartamento, tilEmail, tilPassword;
     private TextInputEditText etNombre, etDepartamento, etEmail, etPassword;
+    private MaterialButton btnRegistro;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_register), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -43,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
 
-        MaterialButton btnRegistro = findViewById(R.id.btn_registro);
+        btnRegistro = findViewById(R.id.btn_registro);
         btnRegistro.setOnClickListener(v -> registrarUsuario());
     }
 
@@ -81,16 +92,39 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(password)) {
             tilPassword.setError(getString(R.string.error_campo_requerido));
             esValido = false;
+        } else if (password.length() < 6) {
+            tilPassword.setError("La contraseña debe tener al menos 6 caracteres");
+            esValido = false;
         }
 
         if (esValido) {
-            Toast.makeText(this, getString(R.string.msg_registro_exitoso), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra("NOMBRE_RESIDENTE", nombre);
-            intent.putExtra("NUMERO_VIVIENDA", "Depto. " + departamento);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            btnRegistro.setEnabled(false);
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        btnRegistro.setEnabled(true);
+                        if (task.isSuccessful()) {
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            if (firebaseUser != null) {
+                                String uid = firebaseUser.getUid();
+                                String deptoFmt = departamento.startsWith("Depto") ? departamento : "Depto. " + departamento;
+                                Usuario nuevoUsuario = new Usuario(uid, nombre, deptoFmt, email, "Residente");
+
+                                mDatabase.child("usuarios").child(uid).setValue(nuevoUsuario)
+                                        .addOnCompleteListener(dbTask -> {
+                                            Toast.makeText(RegisterActivity.this, getString(R.string.msg_registro_exitoso), Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                            intent.putExtra("NOMBRE_RESIDENTE", nombre);
+                                            intent.putExtra("NUMERO_VIVIENDA", deptoFmt);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        });
+                            }
+                        } else {
+                            String error = task.getException() != null ? task.getException().getMessage() : "Error en el registro";
+                            Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_LONG).show();
+                        }
+                    });
         }
     }
 }

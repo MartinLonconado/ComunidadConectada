@@ -3,16 +3,29 @@ package com.example.comunidadconectada;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AnunciosActivity extends AppCompatActivity {
+
+    private final List<Anuncio> listaAnuncios = new ArrayList<>();
+    private AnunciosAdapter adapter;
+    private DatabaseReference mAnunciosRef;
+    private ValueEventListener anunciosListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +40,45 @@ public class AnunciosActivity extends AppCompatActivity {
         });
 
         RecyclerView rvAnuncios = findViewById(R.id.rv_anuncios);
+        adapter = new AnunciosAdapter(listaAnuncios);
+        rvAnuncios.setAdapter(adapter);
 
-        List<Anuncio> listaAnuncios = new ArrayList<>();
+        mAnunciosRef = FirebaseDatabase.getInstance().getReference("anuncios");
+        cargarAnunciosDesdeFirebase();
+    }
+
+    private void cargarAnunciosDesdeFirebase() {
+        anunciosListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listaAnuncios.clear();
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    Anuncio anuncio = item.getValue(Anuncio.class);
+                    if (anuncio != null) {
+                        listaAnuncios.add(anuncio);
+                    }
+                }
+                if (listaAnuncios.isEmpty()) {
+                    cargarAnunciosDemo();
+                } else {
+                    Collections.reverse(listaAnuncios);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (listaAnuncios.isEmpty()) {
+                    cargarAnunciosDemo();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        };
+
+        mAnunciosRef.addValueEventListener(anunciosListener);
+    }
+
+    private void cargarAnunciosDemo() {
         listaAnuncios.add(new Anuncio(
                 "Corte Programado de Agua",
                 "Se realizará un corte del suministro de agua potable por trabajos de reparación en la bomba principal mañana entre las 09:00 y 13:00 hrs.",
@@ -47,8 +97,13 @@ public class AnunciosActivity extends AppCompatActivity {
                 "Conserjería",
                 "20/05/2024"
         ));
+    }
 
-        AnunciosAdapter adapter = new AnunciosAdapter(listaAnuncios);
-        rvAnuncios.setAdapter(adapter);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAnunciosRef != null && anunciosListener != null) {
+            mAnunciosRef.removeEventListener(anunciosListener);
+        }
     }
 }
