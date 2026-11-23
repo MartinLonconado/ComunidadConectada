@@ -33,7 +33,21 @@
     <string name="btn_alertas">Alertas</string>
     <string name="btn_activar_alarma">Activar alarma</string>
     <string name="btn_mi_perfil">Mi perfil</string>
+    <string name="btn_cerrar_sesion">Cerrar sesión</string>
 
     <string name="msg_alarma_activada">¡ALARMA DE EMERGENCIA ACTIVADA!</string>
     <string name="msg_abriendo_seccion">Abriendo: %s</string>
+
+    <!-- Perfil -->
+    <string name="title_perfil">Mi Perfil</string>
+    <string name="label_correo">Correo electrónico</string>
+    <string name="sample_correo">juan.perez@ejemplo.com</string>
+    <string name="label_rol">Rol de usuario</string>
+    <string name="sample_rol">Residente</string>
+    <string name="btn_editar_nombre">Editar nombre</string>
+    <string name="dialog_editar_nombre_titulo">Editar nombre</string>
+    <string name="dialog_editar_nombre_hint">Nuevo nombre</string>
+    <string name="btn_guardar">Guardar</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="msg_nombre_actualizado">Nombre actualizado correctamente</string>
 </resources>

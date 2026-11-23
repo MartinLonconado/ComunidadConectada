@@ -1,5 +1,6 @@
 package com.example.comunidadconectada;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,9 @@ import com.google.android.material.button.MaterialButton;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private TextView tvNombreResidente;
+    private TextView tvNumeroVivienda;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +31,8 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        TextView tvNombreResidente = findViewById(R.id.tv_nombre_residente);
-        TextView tvNumeroVivienda = findViewById(R.id.tv_numero_vivienda);
+        tvNombreResidente = findViewById(R.id.tv_nombre_residente);
+        tvNumeroVivienda = findViewById(R.id.tv_numero_vivienda);
 
         if (getIntent().hasExtra("NOMBRE_RESIDENTE")) {
             String nombre = getIntent().getStringExtra("NOMBRE_RESIDENTE");
@@ -49,14 +53,16 @@ public class HomeActivity extends AppCompatActivity {
         MaterialButton btnAlertas = findViewById(R.id.btn_alertas);
         MaterialButton btnActivarAlarma = findViewById(R.id.btn_activar_alarma);
         MaterialButton btnMiPerfil = findViewById(R.id.btn_mi_perfil);
+        MaterialButton btnCerrarSesion = findViewById(R.id.btn_cerrar_sesion);
 
         btnChatGeneral.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_chat_general)));
         btnAnuncios.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_anuncios)));
         btnProductos.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_productos)));
         btnAlertas.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_alertas)));
-        btnMiPerfil.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_mi_perfil)));
-
         btnActivarAlarma.setOnClickListener(v -> activarAlarma());
+
+        btnMiPerfil.setOnClickListener(v -> abrirPerfil());
+        btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
     }
 
     private void mostrarSeccion(String seccion) {
@@ -69,5 +75,19 @@ public class HomeActivity extends AppCompatActivity {
                 .setMessage(R.string.msg_alarma_activada)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+
+    private void abrirPerfil() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("NOMBRE_RESIDENTE", tvNombreResidente.getText().toString());
+        intent.putExtra("NUMERO_VIVIENDA", tvNumeroVivienda.getText().toString());
+        startActivity(intent);
+    }
+
+    private void cerrarSesion() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
