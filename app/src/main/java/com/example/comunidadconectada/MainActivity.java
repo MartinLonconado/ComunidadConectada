@@ -1,5 +1,6 @@
 package com.example.comunidadconectada;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -17,8 +18,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextInputLayout tilNombre, tilDepartamento, tilEmail, tilPassword;
-    private TextInputEditText etNombre, etDepartamento, etEmail, etPassword;
+    private TextInputLayout tilEmail, tilPassword;
+    private TextInputEditText etEmail, etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,42 +33,28 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        tilNombre = findViewById(R.id.til_nombre);
-        tilDepartamento = findViewById(R.id.til_departamento);
         tilEmail = findViewById(R.id.til_email);
         tilPassword = findViewById(R.id.til_password);
-
-        etNombre = findViewById(R.id.et_nombre);
-        etDepartamento = findViewById(R.id.et_departamento);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
 
-        MaterialButton btnRegistro = findViewById(R.id.btn_registro);
-        btnRegistro.setOnClickListener(v -> registrarUsuario());
+        MaterialButton btnIniciarSesion = findViewById(R.id.btn_iniciar_sesion);
+        MaterialButton btnRegistrarse = findViewById(R.id.btn_registrarse);
+        MaterialButton btnRecuperarPassword = findViewById(R.id.btn_recuperar_password);
+
+        btnIniciarSesion.setOnClickListener(v -> iniciarSesion());
+        btnRegistrarse.setOnClickListener(v -> abrirRegistro());
+        btnRecuperarPassword.setOnClickListener(v -> recuperarPassword());
     }
 
-    private void registrarUsuario() {
-        tilNombre.setError(null);
-        tilDepartamento.setError(null);
+    private void iniciarSesion() {
         tilEmail.setError(null);
         tilPassword.setError(null);
 
-        String nombre = etNombre.getText() != null ? etNombre.getText().toString().trim() : "";
-        String departamento = etDepartamento.getText() != null ? etDepartamento.getText().toString().trim() : "";
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
 
         boolean esValido = true;
-
-        if (TextUtils.isEmpty(nombre)) {
-            tilNombre.setError(getString(R.string.error_campo_requerido));
-            esValido = false;
-        }
-
-        if (TextUtils.isEmpty(departamento)) {
-            tilDepartamento.setError(getString(R.string.error_campo_requerido));
-            esValido = false;
-        }
 
         if (TextUtils.isEmpty(email)) {
             tilEmail.setError(getString(R.string.error_campo_requerido));
@@ -83,7 +70,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (esValido) {
-            Toast.makeText(this, getString(R.string.msg_registro_exitoso), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void abrirRegistro() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+    private void recuperarPassword() {
+        tilEmail.setError(null);
+        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+
+        if (TextUtils.isEmpty(email)) {
+            tilEmail.setError(getString(R.string.error_campo_requerido));
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError(getString(R.string.error_email_invalido));
+        } else {
+            Toast.makeText(this, getString(R.string.msg_recuperar_password), Toast.LENGTH_LONG).show();
         }
     }
 }

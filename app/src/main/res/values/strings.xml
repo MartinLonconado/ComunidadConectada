@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">ComunidadConectada</string>
+    <string name="title_login">Iniciar Sesión</string>
+    <string name="subtitle_login">Bienvenido a Comunidad Conectada</string>
     <string name="title_registro">Crear Cuenta</string>
     <string name="subtitle_registro">Por favor, ingresa tus datos para registrarte</string>
     <string name="label_nombre">Nombre completo</string>
@@ -9,8 +11,12 @@
     <string name="label_email">Correo electrónico</string>
     <string name="hint_email">correo@ejemplo.com</string>
     <string name="label_password">Contraseña</string>
+    <string name="btn_iniciar_sesion">Iniciar sesión</string>
     <string name="btn_registro">Registrarse</string>
+    <string name="btn_recuperar_password">Recuperar contraseña</string>
+    <string name="msg_login_exitoso">¡Inicio de sesión exitoso!</string>
     <string name="msg_registro_exitoso">¡Registro realizado con éxito!</string>
+    <string name="msg_recuperar_password">Se han enviado instrucciones a tu correo electrónico</string>
     <string name="error_campo_requerido">Este campo es obligatorio</string>
     <string name="error_email_invalido">Ingresa un correo válido</string>
 </resources>
