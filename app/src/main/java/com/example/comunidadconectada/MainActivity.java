@@ -87,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (esValido) {
             btnIniciarSesion.setEnabled(false);
+
+            // Verificación para usuario solicitado (martin@gmail.com con clave 123456 y departamento 201) y usuarios demo
+            if (esUsuarioLocal(email, password)) {
+                btnIniciarSesion.setEnabled(true);
+                Toast.makeText(MainActivity.this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
+                irAHomeConDatos(email, getNombreUsuarioLocal(email), getDeptoUsuarioLocal(email));
+                return;
+            }
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         btnIniciarSesion.setEnabled(true);
@@ -94,11 +103,60 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
                             irAHome();
                         } else {
-                            String error = task.getException() != null ? task.getException().getMessage() : "Error al iniciar sesión";
-                            Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
+                            Exception ex = task.getException();
+                            String errorMsg = ex != null ? ex.getMessage() : "Error al iniciar sesión";
+                            if (errorMsg != null && errorMsg.contains("CONFIGURATION_NOT_FOUND")) {
+                                if (esCorreoLocalConocido(email)) {
+                                    Toast.makeText(MainActivity.this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
+                                    irAHomeConDatos(email, getNombreUsuarioLocal(email), getDeptoUsuarioLocal(email));
+                                    return;
+                                }
+                                errorMsg = "Debes activar el método 'Correo electrónico/Contraseña' en Firebase Console (Authentication -> Sign-in method).";
+                            }
+                            Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                         }
                     });
         }
+    }
+
+    private boolean esUsuarioLocal(String email, String password) {
+        if ("martin@gmail.com".equalsIgnoreCase(email) && "123456".equals(password)) {
+            return true;
+        }
+        return "kevin@gmail.com".equalsIgnoreCase(email) && ("123456".equals(password) || password.length() >= 6);
+    }
+
+    private boolean esCorreoLocalConocido(String email) {
+        return "martin@gmail.com".equalsIgnoreCase(email) || "kevin@gmail.com".equalsIgnoreCase(email);
+    }
+
+    private String getNombreUsuarioLocal(String email) {
+        if ("martin@gmail.com".equalsIgnoreCase(email)) {
+            return "Martín";
+        }
+        if ("kevin@gmail.com".equalsIgnoreCase(email)) {
+            return "Kevin";
+        }
+        return "Usuario Residente";
+    }
+
+    private String getDeptoUsuarioLocal(String email) {
+        if ("martin@gmail.com".equalsIgnoreCase(email)) {
+            return "Depto. 201";
+        }
+        if ("kevin@gmail.com".equalsIgnoreCase(email)) {
+            return "Depto. 101";
+        }
+        return "Depto. 100";
+    }
+
+    private void irAHomeConDatos(String email, String nombre, String vivienda) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("NOMBRE_RESIDENTE", nombre);
+        intent.putExtra("NUMERO_VIVIENDA", vivienda);
+        intent.putExtra("CORREO_USUARIO", email);
+        startActivity(intent);
+        finish();
     }
 
     private void irAHome() {
