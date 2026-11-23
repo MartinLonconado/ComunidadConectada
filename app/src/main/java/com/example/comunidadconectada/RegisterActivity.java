@@ -1,5 +1,6 @@
 package com.example.comunidadconectada;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -84,6 +85,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (esValido) {
             Toast.makeText(this, getString(R.string.msg_registro_exitoso), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("NOMBRE_RESIDENTE", nombre);
+            intent.putExtra("NUMERO_VIVIENDA", "Depto. " + departamento);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             finish();
         }
     }

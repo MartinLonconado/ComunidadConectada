@@ -71,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (esValido) {
             Toast.makeText(this, getString(R.string.msg_login_exitoso), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
