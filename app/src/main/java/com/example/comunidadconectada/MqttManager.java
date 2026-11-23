@@ -106,7 +106,7 @@ public class MqttManager {
                 // Suscribirse a los tópicos de la comunidad
                 mqttClient.subscribe("comunidad/#", 1);
 
-            } catch (MqttException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Error conectando a MQTT: " + e.getMessage(), e);
             }
         }).start();

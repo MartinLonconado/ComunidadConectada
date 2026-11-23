@@ -79,7 +79,11 @@ public class ComunidadFirebaseMessagingService extends FirebaseMessagingService 
                 .setContentIntent(pendingIntent);
 
         if (notificationManager != null) {
-            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+            try {
+                notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+            } catch (SecurityException e) {
+                Log.w(TAG, "No se tiene permiso para mostrar notificación: " + e.getMessage());
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.comunidadconectada;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +29,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     @Override
     public void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position) {
         ChatMessage message = messageList.get(position);
-        holder.tvNombre.setText(message.getNombre());
-        holder.tvVivienda.setText(holder.itemView.getContext().getString(R.string.fmt_vivienda, message.getVivienda()));
-        holder.tvTexto.setText(message.getMensaje());
-        holder.tvFechaHora.setText(message.getFechaHora());
+        if (message == null) return;
+        Context context = holder.itemView.getContext();
+
+        holder.tvNombre.setText(message.getNombre() != null ? message.getNombre() : "Vecino");
+        String vivienda = message.getVivienda() != null && !message.getVivienda().isEmpty() ? message.getVivienda() : "Comunidad";
+        holder.tvVivienda.setText(context.getString(R.string.fmt_vivienda, vivienda));
+        holder.tvTexto.setText(message.getMensaje() != null ? message.getMensaje() : "");
+        holder.tvFechaHora.setText(message.getFechaHora() != null ? message.getFechaHora() : "");
     }
 
     @Override

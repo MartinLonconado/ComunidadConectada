@@ -85,6 +85,19 @@ public class HomeActivity extends AppCompatActivity {
         tvNombreResidente = findViewById(R.id.tv_nombre_residente);
         tvNumeroVivienda = findViewById(R.id.tv_numero_vivienda);
 
+        if (getIntent().hasExtra("NOMBRE_RESIDENTE")) {
+            String nombre = getIntent().getStringExtra("NOMBRE_RESIDENTE");
+            if (nombre != null && !nombre.isEmpty()) {
+                tvNombreResidente.setText(nombre);
+            }
+        }
+        if (getIntent().hasExtra("NUMERO_VIVIENDA")) {
+            String vivienda = getIntent().getStringExtra("NUMERO_VIVIENDA");
+            if (vivienda != null && !vivienda.isEmpty()) {
+                tvNumeroVivienda.setText(vivienda);
+            }
+        }
+
         cargarDatosUsuario();
 
         MaterialButton btnChatGeneral = findViewById(R.id.btn_chat_general);

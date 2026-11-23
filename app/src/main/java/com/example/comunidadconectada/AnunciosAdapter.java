@@ -1,5 +1,6 @@
 package com.example.comunidadconectada;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +29,15 @@ public class AnunciosAdapter extends RecyclerView.Adapter<AnunciosAdapter.Anunci
     @Override
     public void onBindViewHolder(@NonNull AnuncioViewHolder holder, int position) {
         Anuncio anuncio = listaAnuncios.get(position);
-        holder.tvTitulo.setText(anuncio.getTitulo());
-        holder.tvContenido.setText(anuncio.getContenido());
-        String pubText = holder.itemView.getContext().getString(R.string.label_publicado_por) + " " + anuncio.getPublicadoPor();
+        if (anuncio == null) return;
+        Context context = holder.itemView.getContext();
+
+        holder.tvTitulo.setText(anuncio.getTitulo() != null ? anuncio.getTitulo() : "");
+        holder.tvContenido.setText(anuncio.getContenido() != null ? anuncio.getContenido() : "");
+        String publicadoPor = anuncio.getPublicadoPor() != null ? anuncio.getPublicadoPor() : "Administración";
+        String pubText = context.getString(R.string.label_publicado_por) + " " + publicadoPor;
         holder.tvPublicadoPor.setText(pubText);
-        holder.tvFecha.setText(anuncio.getFecha());
+        holder.tvFecha.setText(anuncio.getFecha() != null ? anuncio.getFecha() : "");
     }
 
     @Override

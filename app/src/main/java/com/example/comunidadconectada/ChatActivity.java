@@ -92,6 +92,8 @@ public class ChatActivity extends AppCompatActivity {
                 if (message != null) {
                     if (message.getSenderUid() != null && !currentUid.isEmpty()) {
                         message.setEsMio(message.getSenderUid().equals(currentUid));
+                    } else if (message.getNombre() != null && !message.getNombre().isEmpty()) {
+                        message.setEsMio(message.getNombre().equalsIgnoreCase(nombreUsuario));
                     }
                     messageList.add(message);
                     adapter.notifyItemInserted(messageList.size() - 1);

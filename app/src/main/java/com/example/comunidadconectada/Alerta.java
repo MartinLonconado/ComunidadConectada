@@ -69,7 +69,7 @@ public class Alerta {
     }
 
     public EstadoAlerta getEstado() {
-        return estado;
+        return estado != null ? estado : EstadoAlerta.ACTIVA;
     }
 
     public void setEstado(EstadoAlerta estado) {

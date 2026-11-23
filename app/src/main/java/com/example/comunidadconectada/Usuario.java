@@ -6,6 +6,7 @@ public class Usuario {
     private String departamento;
     private String correo;
     private String rol;
+    private String fcmToken;
 
     // Constructor vacío requerido por Firebase Realtime Database
     public Usuario() {
@@ -57,5 +58,13 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

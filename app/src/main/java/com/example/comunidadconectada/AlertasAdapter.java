@@ -32,19 +32,22 @@ public class AlertasAdapter extends RecyclerView.Adapter<AlertasAdapter.AlertaVi
     @Override
     public void onBindViewHolder(@NonNull AlertaViewHolder holder, int position) {
         Alerta alerta = listaAlertas.get(position);
+        if (alerta == null) return;
         Context context = holder.itemView.getContext();
 
-        holder.tvTitulo.setText(alerta.getTitulo());
-        holder.tvDescripcion.setText(alerta.getDescripcion());
-        String residenteText = context.getString(R.string.label_alerta_reportado_por) + " " + alerta.getResidente();
+        holder.tvTitulo.setText(alerta.getTitulo() != null ? alerta.getTitulo() : "");
+        holder.tvDescripcion.setText(alerta.getDescripcion() != null ? alerta.getDescripcion() : "");
+        String nombreResidente = alerta.getResidente() != null ? alerta.getResidente() : "Vecino";
+        String residenteText = context.getString(R.string.label_alerta_reportado_por) + " " + nombreResidente;
         holder.tvResidente.setText(residenteText);
-        holder.tvFecha.setText(alerta.getFechaHora());
+        holder.tvFecha.setText(alerta.getFechaHora() != null ? alerta.getFechaHora() : "");
 
         int estadoTextRes;
         int bgColorRes;
         int textColorRes;
 
-        switch (alerta.getEstado()) {
+        EstadoAlerta estado = alerta.getEstado() != null ? alerta.getEstado() : EstadoAlerta.ACTIVA;
+        switch (estado) {
             case ACTIVA:
                 estadoTextRes = R.string.label_estado_activa;
                 bgColorRes = R.color.estado_activa_bg;
