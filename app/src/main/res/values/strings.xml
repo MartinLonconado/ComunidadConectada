@@ -50,4 +50,14 @@
     <string name="btn_guardar">Guardar</string>
     <string name="btn_cancelar">Cancelar</string>
     <string name="msg_nombre_actualizado">Nombre actualizado correctamente</string>
+
+    <!-- Chat Grupal -->
+    <string name="title_chat">Chat Grupal</string>
+    <string name="hint_escribe_mensaje">Escribe un mensaje&#8230;</string>
+    <string name="btn_enviar">Enviar</string>
+    <string name="fmt_vivienda">(%1$s)</string>
+
+    <!-- Anuncios -->
+    <string name="title_anuncios">Anuncios de la Comunidad</string>
+    <string name="label_publicado_por">Publicado por:</string>
 </resources>

@@ -55,14 +55,26 @@ public class HomeActivity extends AppCompatActivity {
         MaterialButton btnMiPerfil = findViewById(R.id.btn_mi_perfil);
         MaterialButton btnCerrarSesion = findViewById(R.id.btn_cerrar_sesion);
 
-        btnChatGeneral.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_chat_general)));
-        btnAnuncios.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_anuncios)));
+        btnChatGeneral.setOnClickListener(v -> abrirChat());
+        btnAnuncios.setOnClickListener(v -> abrirAnuncios());
         btnProductos.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_productos)));
         btnAlertas.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_alertas)));
         btnActivarAlarma.setOnClickListener(v -> activarAlarma());
 
         btnMiPerfil.setOnClickListener(v -> abrirPerfil());
         btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
+    }
+
+    private void abrirChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("NOMBRE_RESIDENTE", tvNombreResidente.getText().toString());
+        intent.putExtra("NUMERO_VIVIENDA", tvNumeroVivienda.getText().toString());
+        startActivity(intent);
+    }
+
+    private void abrirAnuncios() {
+        Intent intent = new Intent(this, AnunciosActivity.class);
+        startActivity(intent);
     }
 
     private void mostrarSeccion(String seccion) {
