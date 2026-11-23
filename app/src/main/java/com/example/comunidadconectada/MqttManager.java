@@ -12,13 +12,16 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.nio.charset.StandardCharsets;
+import javax.net.ssl.SSLSocketFactory;
 
 public class MqttManager {
     private static final String TAG = "MqttManager";
     private static MqttManager instance;
 
-    // Broker por defecto (puede cambiarse por HiveMQ Cloud, Mosquitto, etc.)
-    private static final String DEFAULT_BROKER_URL = "tcp://broker.emqx.io:1883";
+    // Broker privado EMQX Serverless con SSL/TLS
+    private static final String DEFAULT_BROKER_URL = "ssl://a7bfe043.ala.us-east-1.emqxsl.com:8883";
+    private static final String DEFAULT_USERNAME = "kevin";
+    private static final String DEFAULT_PASSWORD = "kevin";
     private static final String TOPIC_ALARMA = "comunidad/alarma/activar";
 
     private MqttClient mqttClient;
@@ -53,18 +56,24 @@ public class MqttManager {
 
                 String url = (brokerUrl != null && !brokerUrl.isEmpty()) ? brokerUrl : DEFAULT_BROKER_URL;
                 String cId = (clientId != null && !clientId.isEmpty()) ? clientId : MqttClient.generateClientId();
+                String user = (username != null && !username.isEmpty()) ? username : DEFAULT_USERNAME;
+                String pass = (password != null && !password.isEmpty()) ? password : DEFAULT_PASSWORD;
 
                 mqttClient = new MqttClient(url, cId, new MemoryPersistence());
 
                 MqttConnectOptions options = new MqttConnectOptions();
                 options.setCleanSession(true);
-                options.setConnectionTimeout(10);
-                options.setKeepAliveInterval(20);
+                options.setConnectionTimeout(15);
+                options.setKeepAliveInterval(30);
                 options.setAutomaticReconnect(true);
 
-                if (username != null && password != null) {
-                    options.setUserName(username);
-                    options.setPassword(password.toCharArray());
+                if (user != null && pass != null) {
+                    options.setUserName(user);
+                    options.setPassword(pass.toCharArray());
+                }
+
+                if (url.startsWith("ssl://")) {
+                    options.setSocketFactory(SSLSocketFactory.getDefault());
                 }
 
                 mqttClient.setCallback(new MqttCallback() {
@@ -92,9 +101,9 @@ public class MqttManager {
                 });
 
                 mqttClient.connect(options);
-                Log.i(TAG, "Conectado exitosamente al broker MQTT: " + url);
+                Log.i(TAG, "Conectado exitosamente al broker MQTT SSL: " + url);
 
-                // Suscribirse a los tópicos relevantes de la comunidad
+                // Suscribirse a los tópicos de la comunidad
                 mqttClient.subscribe("comunidad/#", 1);
 
             } catch (MqttException e) {
