@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnIniciarSesion.setOnClickListener(v -> iniciarSesion());
         btnRegistrarse.setOnClickListener(v -> abrirRegistro());
-        btnRecuperarPassword.setOnClickListener(v -> recuperarPassword());
+        btnRecuperarPassword.setOnClickListener(v -> abrirRecuperarPassword());
     }
 
     private void iniciarSesion() {
@@ -82,16 +82,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void recuperarPassword() {
-        tilEmail.setError(null);
-        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
-
-        if (TextUtils.isEmpty(email)) {
-            tilEmail.setError(getString(R.string.error_campo_requerido));
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError(getString(R.string.error_email_invalido));
-        } else {
-            Toast.makeText(this, getString(R.string.msg_recuperar_password), Toast.LENGTH_LONG).show();
-        }
+    private void abrirRecuperarPassword() {
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        startActivity(intent);
     }
 }

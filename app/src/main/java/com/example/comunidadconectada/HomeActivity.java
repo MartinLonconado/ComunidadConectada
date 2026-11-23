@@ -3,7 +3,7 @@ package com.example.comunidadconectada;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
+// import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
 
         MaterialButton btnChatGeneral = findViewById(R.id.btn_chat_general);
         MaterialButton btnAnuncios = findViewById(R.id.btn_anuncios);
-        MaterialButton btnProductos = findViewById(R.id.btn_productos);
+        // MaterialButton btnProductos = findViewById(R.id.btn_productos); // Guardado como rastro para uso futuro
         MaterialButton btnAlertas = findViewById(R.id.btn_alertas);
         MaterialButton btnActivarAlarma = findViewById(R.id.btn_activar_alarma);
         MaterialButton btnMiPerfil = findViewById(R.id.btn_mi_perfil);
@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
 
         btnChatGeneral.setOnClickListener(v -> abrirChat());
         btnAnuncios.setOnClickListener(v -> abrirAnuncios());
-        btnProductos.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_productos)));
+        // btnProductos.setOnClickListener(v -> mostrarSeccion(getString(R.string.btn_productos))); // Guardado como rastro para uso futuro
         btnAlertas.setOnClickListener(v -> abrirAlertas());
         btnActivarAlarma.setOnClickListener(v -> activarAlarma());
 
@@ -82,9 +82,10 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void mostrarSeccion(String seccion) {
-        Toast.makeText(this, getString(R.string.msg_abriendo_seccion, seccion), Toast.LENGTH_SHORT).show();
-    }
+    // Private helper guardado como rastro para uso futuro con secciones desactivadas
+    // private void mostrarSeccion(String seccion) {
+    //     Toast.makeText(this, getString(R.string.msg_abriendo_seccion, seccion), Toast.LENGTH_SHORT).show();
+    // }
 
     private void activarAlarma() {
         new AlertDialog.Builder(this)

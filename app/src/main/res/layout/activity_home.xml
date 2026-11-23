@@ -140,7 +140,7 @@
             app:layout_constraintStart_toEndOf="@id/btn_chat_general"
             app:layout_constraintTop_toTopOf="@id/btn_chat_general" />
 
-        <!-- Botón Productos -->
+        <!-- Botón Productos (Desactivado/Comentado - rastro conservado para uso futuro)
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_productos"
             style="@style/Widget.Material3.Button.OutlinedButton"
@@ -154,6 +154,7 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_chat_general" />
+        -->
 
         <!-- Botón Alertas -->
         <com.google.android.material.button.MaterialButton
@@ -161,13 +162,12 @@
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginTop="12dp"
             android:paddingVertical="14dp"
             android:text="@string/btn_alertas"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/btn_productos"
-            app:layout_constraintTop_toTopOf="@id/btn_productos" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_chat_general" />
 
         <!-- Botón Mi perfil -->
         <com.google.android.material.button.MaterialButton
@@ -180,7 +180,7 @@
             android:text="@string/btn_mi_perfil"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_productos" />
+            app:layout_constraintTop_toBottomOf="@id/btn_alertas" />
 
         <!-- Botón Cerrar sesión -->
         <com.google.android.material.button.MaterialButton

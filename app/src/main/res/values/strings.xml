@@ -68,4 +68,9 @@
     <string name="label_estado_atendida">Atendida</string>
     <string name="label_estado_cerrada">Cerrada</string>
     <string name="label_alerta_reportado_por">Reportado por:</string>
+
+    <!-- Recuperar Contraseña -->
+    <string name="title_recuperar_password">Recuperar Contraseña</string>
+    <string name="subtitle_recuperar_password">Ingresa tu correo electrónico registrado para enviarte las instrucciones de recuperación</string>
+    <string name="btn_enviar_recuperacion">Enviar al correo</string>
 </resources>
