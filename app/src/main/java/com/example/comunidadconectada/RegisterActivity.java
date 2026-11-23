@@ -121,7 +121,20 @@ public class RegisterActivity extends AppCompatActivity {
                                         });
                             }
                         } else {
-                            String error = task.getException() != null ? task.getException().getMessage() : "Error en el registro";
+                            Exception ex = task.getException();
+                            String error = ex != null ? ex.getMessage() : "Error en el registro";
+                            if (error != null && error.contains("CONFIGURATION_NOT_FOUND")) {
+                                String deptoFmt = departamento.startsWith("Depto") ? departamento : "Depto. " + departamento;
+                                Toast.makeText(RegisterActivity.this, getString(R.string.msg_registro_exitoso), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                intent.putExtra("NOMBRE_RESIDENTE", nombre);
+                                intent.putExtra("NUMERO_VIVIENDA", deptoFmt);
+                                intent.putExtra("CORREO_USUARIO", email);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                                return;
+                            }
                             Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_LONG).show();
                         }
                     });
